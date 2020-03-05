@@ -56,4 +56,9 @@ trait MustVerifyPhone
 
 		return $this->{$field};
 	}
+//
+//	public function routeNotificationForNetgsm()
+//	{
+//		return $this->getPhoneForVerification();
+//	}
 }

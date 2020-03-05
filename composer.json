@@ -1,17 +1,18 @@
 {
-    "name": "tuncay/laravel-nexmo-verify",
-    "description": "Laravel phone number verification using Nexmo",
-    "type": "library",
-    "require": {
-		"nexmo/laravel": "^2.0"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Tuncay Akdeniz",
-            "email": "akdeniztuncay44@gmail.com"
-        }
-    ],
+	"name": "tuncay/laravel-nexmo-verify",
+	"description": "Laravel phone number verification using Nexmo",
+	"type": "library",
+	"require": {
+		"nexmo/laravel": "^2.0",
+		"tarfin-labs/netgsm": "^2.1"
+	},
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Tuncay Akdeniz",
+			"email": "akdeniztuncay44@gmail.com"
+		}
+	],
 	"autoload": {
 		"psr-4": {
 			"Takdeniz\\PhoneVerify\\": "src/"

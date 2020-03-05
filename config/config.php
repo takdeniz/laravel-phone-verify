@@ -11,16 +11,26 @@ return [
 	 */
 	'phone_number_field' => 'phone_number',
 
-
 	/**
 	 * phone number column on User model
 	 */
-	'send_verify_sms' => true,
-
+	'send_verify_sms'    => true,
 
 	/**
 	 * Allow sms resend timeout
 	 */
-	'allow_resend_in' => 300,//in second
+	'allow_resend_in'    => 300,//in second
 
+	/**
+	 * default driver name
+	 */
+	'default'            => 'netgsm',
+
+	/**
+	 * available verification drivers
+	 */
+	'drivers'            => [
+		'netgsm'       => \Takdeniz\PhoneVerify\Drivers\NetGSMVerify::class,
+		'nexmo_verify' => \Takdeniz\PhoneVerify\Drivers\NexmoVerify::class,
+	]
 ];

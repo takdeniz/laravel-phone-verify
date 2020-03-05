@@ -7,6 +7,7 @@ use Nexmo\Laravel\Facade\Nexmo;
 use Takdeniz\PhoneVerify\Contracts\MustVerifyPhoneContract;
 use Takdeniz\PhoneVerify\Events\PhoneVerified;
 use Takdeniz\PhoneVerify\Repositories\VerifyPhoneRepository;
+use Takdeniz\PhoneVerify\Verifier;
 
 /**
  * Trait VerifiesPhone
@@ -38,7 +39,7 @@ trait VerifiesPhone
 		if (!$user) {
 			return $this->errorUnauthorized();
 		}
-		if (env('SMS_SECRET_VERIFY') && $request->code === env('SMS_SECRET_VERIFY')) {
+		if (env('SMS_SECRET_VERIFY_CODE') && $request->code === env('SMS_SECRET_VERIFY_CODE')) {
 			return $this->verified($user);
 		}
 
@@ -49,12 +50,9 @@ trait VerifiesPhone
 		}
 
 		try {
-			Nexmo::verify()->check(
-				$latest->request_id,
-				$request->code
-			); // ea560957cbb346f4a663a0dabb809006
+			Verifier::check($request->code,$latest);
 
-		} catch (\Nexmo\Client\Exception\Request $e) {
+		} catch (\Exception $e) {
 			return $this->errorUnauthorized('invalid_code');
 		}
 

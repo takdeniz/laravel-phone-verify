@@ -5,9 +5,10 @@ use Config;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use Nexmo;
 use Takdeniz\PhoneVerify\Contracts\MustVerifyPhoneContract;
-use Takdeniz\PhoneVerify\Repositories\VerifyPhoneRepository;
+use Takdeniz\PhoneVerify\Drivers\NetGSMVerify;
+use TarfinLabs\Netgsm\NetgsmChannel;
+use TarfinLabs\Netgsm\Sms\NetgsmOtpMessage;
 
 /**
  * Class VerifyPhoneNotification
@@ -21,6 +22,9 @@ class VerifyPhoneNotification extends Notification implements ShouldQueue
 {
 	use Queueable;
 
+	/**
+	 * @var
+	 */
 	protected $verifyRequestId;
 
 	/**
@@ -31,7 +35,8 @@ class VerifyPhoneNotification extends Notification implements ShouldQueue
 	 */
 	public function via($notifiable)
 	{
-		return [/*'nexmo',*/ 'database'];
+//		return [NexmoVerifyChannel::class, NetGsmChannel::class];
+		return [NetGsmChannel::class];
 	}
 
 	/**
@@ -50,18 +55,32 @@ class VerifyPhoneNotification extends Notification implements ShouldQueue
 	 */
 	public function toArray($notifiable)
 	{
-		$verification = Nexmo::verify()->start([
+		return [
 			'number' => $notifiable->getPhoneForVerification(),
 			'brand'  => $this->getBrand(),
-		]);
-//		$this->verifyRequestId = $verification->getRequestId();
-		(new VerifyPhoneRepository())->createVerifyRequest(
-			$notifiable->getPhoneForVerification(),
-			$verification->getRequestId()
-		);
-
-		return [
-			'message' => 'Phone number verification message has been sent'
 		];
+	}
+
+	/**
+	 * @param MustVerifyPhoneContract $notifiable
+	 * @return array
+	 */
+	public function toNexmoVerify($notifiable)
+	{
+		return [
+			'number' => $notifiable->getPhoneForVerification(),
+			'brand'  => $this->getBrand(),
+		];
+	}
+
+	/**
+	 * @param $notifiable
+	 * @return NetgsmOtpMessage
+	 */
+	public function toNetgsm($notifiable)
+	{
+		$verification = (new NetGSMVerify())->buildVerifyRequest($notifiable);
+
+		return new NetGsmOtpMessage("Your {$this->getBrand()} code {$verification->code}. Expire in 5 minutes");
 	}
 }

@@ -22,8 +22,9 @@ class CreatePhoneVerificationsTable extends Migration
 	{
 		Schema::create('phone_verifications', function (Blueprint $table) {
 			$table->bigIncrements('id');
-			$table->string('phone_number')->nullable();
-			$table->string('request_id')->nullable();
+			$table->string('phone_number');
+			$table->string('code')->nullable();
+			$table->string('channel')->nullable();
 			$table->timestamps();
 		});
 	}

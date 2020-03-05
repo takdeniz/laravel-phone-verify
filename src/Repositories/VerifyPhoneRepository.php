@@ -23,14 +23,15 @@ class VerifyPhoneRepository
 
 	/**
 	 * @param $phoneNumber
-	 * @param $requestId
+	 * @param $code
 	 * @return mixed
 	 */
-	public function createVerifyRequest($phoneNumber, $requestId)
+	public function createVerifyRequest($phoneNumber, $code, $channel = null)
 	{
 		return PhoneVerification::create([
 			$this->numberField() => $phoneNumber,
-			'request_id'         => $requestId
+			'code'               => $code,
+			'channel'            => $channel,
 		]);
 	}
 

@@ -17,6 +17,6 @@ class PhoneVerification extends Model
 	protected $table = 'phone_verifications';
 
 	protected $fillable = [
-		'phone_number', 'request_id'
+		'phone_number', 'code','channel'
 	];
 }

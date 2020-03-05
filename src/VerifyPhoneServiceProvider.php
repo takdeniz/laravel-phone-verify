@@ -33,12 +33,12 @@ class VerifyPhoneServiceProvider extends ServiceProvider
 		if (function_exists('config_path')) {
 			$this->publishes([
 				dirname(__DIR__) . '/config/config.php' => config_path('verify.php'),
-			], 'laravel-phone-verify-config');
+			], 'config');
 		}
 
 		$this->publishes([
 			dirname(__DIR__) . '/database/migrations' => database_path('migrations'),
-		], 'laravel-phone-verify-migrations');
+		], 'migrations');
 
 	}
 
