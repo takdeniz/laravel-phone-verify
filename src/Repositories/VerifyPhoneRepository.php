@@ -21,6 +21,13 @@ class VerifyPhoneRepository
 		return config('verify.phone_number_field');
 	}
 
+	public function deactivateVerifications($phoneNumber)
+	{
+		return PhoneVerification::where([
+			$this->numberField() => $phoneNumber,
+		])->update(['active' => 0]);
+	}
+
 	/**
 	 * @param $phoneNumber
 	 * @param $code
@@ -28,6 +35,8 @@ class VerifyPhoneRepository
 	 */
 	public function createVerifyRequest($phoneNumber, $code, $channel = null)
 	{
+		$this->deactivateVerifications($phoneNumber);
+
 		return PhoneVerification::create([
 			$this->numberField() => $phoneNumber,
 			'code'               => $code,
@@ -43,7 +52,9 @@ class VerifyPhoneRepository
 	{
 		return PhoneVerification::where([
 			$this->numberField() => $phoneNumber,
-		])->orderBy('created_at', 'DESC')->first();
+		])->orderBy('created_at', 'DESC')
+			->where('active', 1)
+			->first();
 	}
 
 }

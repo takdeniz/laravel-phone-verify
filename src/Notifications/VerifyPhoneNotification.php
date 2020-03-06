@@ -6,14 +6,13 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Takdeniz\PhoneVerify\Contracts\MustVerifyPhoneContract;
-use Takdeniz\PhoneVerify\Drivers\NetGSMVerify;
-use TarfinLabs\Netgsm\NetgsmChannel;
+use Takdeniz\PhoneVerify\Verifier;
 use TarfinLabs\Netgsm\Sms\NetgsmOtpMessage;
 
 /**
  * Class VerifyPhoneNotification
  *
- * @package App\Notifications
+ * @package Takdeniz\PhoneVerify\Notifications
  * @author  Tuncay Akdeniz <akdeniztuncay44@gmail.com>
  * @version 0.1
  * @since   0.1
@@ -32,11 +31,12 @@ class VerifyPhoneNotification extends Notification implements ShouldQueue
 	 *
 	 * @param mixed $notifiable
 	 * @return array|string
+	 * @throws \Exception
 	 */
 	public function via($notifiable)
 	{
 //		return [NexmoVerifyChannel::class, NetGsmChannel::class];
-		return [NetGsmChannel::class];
+		return [Verifier::getDriver()->channel()];
 	}
 
 	/**
@@ -74,13 +74,20 @@ class VerifyPhoneNotification extends Notification implements ShouldQueue
 	}
 
 	/**
-	 * @param $notifiable
+	 * @param MustVerifyPhoneContract $notifiable
 	 * @return NetgsmOtpMessage
 	 */
 	public function toNetgsm($notifiable)
 	{
-		$verification = (new NetGSMVerify())->buildVerifyRequest($notifiable);
+		$verification = Verifier::getDriver()->buildVerifyRequest($notifiable);
 
-		return new NetGsmOtpMessage("Your {$this->getBrand()} code {$verification->code}. Expire in 5 minutes");
+		$message = trans('verify::verify.send_message', [
+			'brand'  => $this->getBrand(),
+			'code'   => $verification->code,
+			'expire' => 5
+		]);
+
+		return (new NetGsmOtpMessage($message))
+			->setRecipients([$notifiable->getPhoneForVerification()]);
 	}
 }

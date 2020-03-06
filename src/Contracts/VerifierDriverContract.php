@@ -11,6 +11,19 @@ namespace Takdeniz\PhoneVerify\Contracts;
  */
 interface VerifierDriverContract
 {
+
+	/**
+	 * @return string
+	 */
+	public function channel();
+
+	/**
+	 * @param MustVerifyPhoneContract $verifiable
+	 * @param string                  $code
+	 * @return mixed
+	 */
+	public function buildVerifyRequest($verifiable, $code = null);
+
 	/**
 	 * @param $code
 	 * @param $verification

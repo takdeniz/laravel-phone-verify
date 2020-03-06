@@ -2,9 +2,8 @@
 namespace Takdeniz\PhoneVerify\Drivers;
 
 use Takdeniz\PhoneVerify\Contracts\VerifierDriverContract;
-use Takdeniz\PhoneVerify\Contracts\MustVerifyPhoneContract;
 use Takdeniz\PhoneVerify\Exceptions\VerificationFailException;
-use Takdeniz\PhoneVerify\Repositories\VerifyPhoneRepository;
+use TarfinLabs\Netgsm\NetgsmChannel;
 
 /**
  * Class NetGSMVerify
@@ -14,21 +13,13 @@ use Takdeniz\PhoneVerify\Repositories\VerifyPhoneRepository;
  * @version 0.1
  * @since   0.1
  */
-class NetGSMVerify implements VerifierDriverContract
+class NetGSMVerify extends BaseVerify implements VerifierDriverContract
 {
-	/**
-	 * @param MustVerifyPhoneContract $verifiable
-	 * @return mixed
-	 */
-	public function buildVerifyRequest($verifiable)
-	{
-		$code = rand(0, 1000);
+	protected $channelKey = 'netgsm';
 
-		return (new VerifyPhoneRepository())->createVerifyRequest(
-			$verifiable->getPhoneForVerification(),
-			$code,
-			'netgsm'
-		);
+	public function channel()
+	{
+		return NetgsmChannel::class;
 	}
 
 	/**
@@ -39,7 +30,7 @@ class NetGSMVerify implements VerifierDriverContract
 	 */
 	public function check($code, $verification)
 	{
-		if ($verification->code == $code) {
+		if ($verification->code === $code) {
 			return true;
 		}
 		throw new VerificationFailException(\Lang::get('invalid.code'));

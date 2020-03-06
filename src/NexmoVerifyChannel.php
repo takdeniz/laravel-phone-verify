@@ -3,6 +3,8 @@ namespace Takdeniz\PhoneVerify;
 
 use Illuminate\Notifications\Notification;
 use Nexmo;
+use Takdeniz\PhoneVerify\Drivers\NetGSMVerify;
+use Takdeniz\PhoneVerify\Drivers\NexmoVerify;
 use Takdeniz\PhoneVerify\Repositories\VerifyPhoneRepository;
 
 /**
@@ -34,10 +36,6 @@ class NexmoVerifyChannel
 
 		$verification = Nexmo::verify()->start($message);
 
-		(new VerifyPhoneRepository())->createVerifyRequest(
-			$message['number'],
-			$verification->getRequestId(),
-			'nexmo_verify'
-		);
+		(new NexmoVerify)->buildVerifyRequest($notifiable, $verification->getRequestId());
 	}
 }

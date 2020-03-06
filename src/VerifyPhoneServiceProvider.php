@@ -28,18 +28,26 @@ class VerifyPhoneServiceProvider extends ServiceProvider
 		parent::boot();
 
 		$this->loadRoutesFrom(__DIR__ . '/routes.php');
-		$this->loadMigrationsFrom(dirname(__DIR__) . '/database/migrations');
 
-		if (function_exists('config_path')) {
+		$this->loadTranslationsFrom(dirname(__DIR__) . '/lang', 'verify');
+
+		if ($this->app->runningInConsole()) {
+			$this->loadMigrationsFrom(dirname(__DIR__) . '/database/migrations');
 			$this->publishes([
-				dirname(__DIR__) . '/config/config.php' => config_path('verify.php'),
-			], 'config');
+				dirname(__DIR__) . '/lang' => resource_path('lang/vendor/verify'),
+			]);
+
+
+			if (function_exists('config_path')) {
+				$this->publishes([
+					dirname(__DIR__) . '/config/config.php' => config_path('verify.php'),
+				], 'config');
+			}
+
+			$this->publishes([
+				dirname(__DIR__) . '/database/migrations' => database_path('migrations'),
+			], 'migrations');
 		}
-
-		$this->publishes([
-			dirname(__DIR__) . '/database/migrations' => database_path('migrations'),
-		], 'migrations');
-
 	}
 
 	/**
@@ -49,6 +57,8 @@ class VerifyPhoneServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
+		$this->mergeConfigFrom(dirname(__DIR__) . '/config/config.php', 'verify');
+
 		$this->app->make('Takdeniz\PhoneVerify\Controllers\VerificationController');
 	}
 }

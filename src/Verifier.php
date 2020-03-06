@@ -14,19 +14,31 @@ use Takdeniz\PhoneVerify\Models\PhoneVerification;
  */
 class Verifier
 {
+
+	/**
+	 * @param string|null $driverName
+	 * @return \Illuminate\Config\Repository|mixed
+	 * @throws \Exception
+	 */
+	public static function getDriverClass(string $driverName = null)
+	{
+		$driverName = $driverName ?: config('verify.default');
+		$class      = config('verify.drivers.' . $driverName);
+		if (!$class) {
+			throw new \Exception('verification.driver.not_found');
+		}
+
+		return $class;
+	}
+
 	/**
 	 * @param string|null $driverName
 	 * @return VerifierDriverContract
 	 * @throws \Exception
 	 */
-	protected static function getDriver(string $driverName = null): VerifierDriverContract
+	public static function getDriver(string $driverName = null): VerifierDriverContract
 	{
-		$driverName = $driverName ?: config('verify.default');
-		$class      = config('verify.drivers.' . $driverName);
-
-		if (!$class) {
-			throw new \Exception('verification.driver.not_found');
-		}
+		$class = static::getDriverClass($driverName);
 
 		return new $class;
 	}
@@ -39,7 +51,13 @@ class Verifier
 	 */
 	public static function check($code, PhoneVerification $verification)
 	{
-		return static::getDriver()->check($code,$verification);
+		$status = static::getDriver()->check($code, $verification);
+		if ($status) {
+			$verification->active = false;
+			$verification->save();
+		}
+
+		return $status;
 	}
 
 }

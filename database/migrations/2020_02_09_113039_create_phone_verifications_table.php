@@ -25,6 +25,7 @@ class CreatePhoneVerificationsTable extends Migration
 			$table->string('phone_number');
 			$table->string('code')->nullable();
 			$table->string('channel')->nullable();
+			$table->integer('active')->default(1);
 			$table->timestamps();
 		});
 	}
