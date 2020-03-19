@@ -1,6 +1,6 @@
 {
-	"name": "tuncay/laravel-nexmo-verify",
-	"description": "Laravel phone number verification using Nexmo",
+	"name": "takdeniz/laravel-phone-verify",
+	"description": "Laravel phone number verification using Nexmo and netgsm",
 	"type": "library",
 	"require": {
 		"nexmo/laravel": "^2.0",
