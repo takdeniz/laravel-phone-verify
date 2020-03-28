@@ -1,25 +1,17 @@
 ##Laravel Phone Verify
 Verifies phone number via nexmo
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/tarfin-labs/netgsm.svg?style=flat-square)](https://packagist.org/packages/takdeniz/laravel-phone-verify)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/tarfin-labs/netgsm/tests?label=tests)
-[![Quality Score](https://img.shields.io/scrutinizer/g/tarfin-labs/netgsm.svg?style=flat-square)](https://scrutinizer-ci.com/g/tarfin-labs/netgsm)
-[![Total Downloads](https://img.shields.io/packagist/dt/takdeniz/laravel-phone-verify.svg?style=flat-square)](https://packagist.org/packages/tarfin-labs/netgsm)
-
 ## Introduction
-This package, you can send easily with Laravel 6.x, 7.x.
 
 
 ## Contents
 
 - [Installation](#installation)
-   - [Setting up the Netgsm service](#setting-up)
+   - [Setting up](#setting-up)
 - [Usage](#usage)
     - [Service Methods](#service-methods)
     - [SMS Sending](#sms-sending)
 - [Testing](#testing)
-- [Security](#security)
-- [Contributing](#contributing)
 - [Credits](#credits)
 - [License](#license)
 
@@ -62,4 +54,4 @@ public function routeNotificationForNetgsm()
 
 
 ### License
-Laravel Netgsm is open-sourced software licensed under the MIT license.
+Laravel Phone Verify is open-sourced software licensed under the MIT license.
