@@ -23,7 +23,7 @@ abstract class BaseVerify
 	 */
 	public function buildVerifyRequest($verifiable, $code = null)
 	{
-		$code = $code ?: rand(1000, 10000);
+		$code = $code ?: rand(1000, 9999);
 
 		return (new VerifyPhoneRepository())->createVerifyRequest(
 			$verifiable->getPhoneForVerification(),
