@@ -1,17 +1,13 @@
 ##Laravel Phone Verify
-Verifies phone number via nexmo
-
+Verifies phone number via Nexmo and Netgsm
+ 
 ## Introduction
-
+It sends verification notifications, it has a controller to verify the phone number 
 
 ## Contents
 
 - [Installation](#installation)
-   - [Setting up](#setting-up)
-- [Usage](#usage)
-    - [Service Methods](#service-methods)
-    - [SMS Sending](#sms-sending)
-- [Testing](#testing)
+   - [Configure](#configure)
 - [Credits](#credits)
 - [License](#license)
 
@@ -31,19 +27,12 @@ php artisan vendor:publish --provider="Takdeniz\PhoneVerify\VerifyPhoneServicePr
 ```
 
 
-
-#### Sms Sending with Using Notification Channel
-
-In order to let your Notification know which phone number you are sending to, add the routeNotificationForNetgsm method to your Notifiable model e.g your User Model
+#### configure
 
 ``` php
-public function routeNotificationForNetgsm()
-{
-    /*
-       where `phone` is a field in your users table, 
-       phone number format can be either `5051234567` or `5051234567, 5441234568`.
-    */
-    return $this->phone;
+class User implements MustVerifyPhoneContract {
+    use MustVerifyPhone;
+    ...
 }
 ```
 
