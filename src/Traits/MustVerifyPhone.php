@@ -56,9 +56,17 @@ trait MustVerifyPhone
 
 		return $this->{$field};
 	}
-//
-//	public function routeNotificationForNetgsm()
-//	{
-//		return $this->getPhoneForVerification();
-//	}
+
+	/**
+	 * @return string
+	 */
+	public function routeNotificationForNetgsm()
+	{
+		if ($pattern = config('verify.driver_resolver.netgsm')) {
+			return preg_replace($pattern, '', $this->getPhoneForVerification());
+		}
+
+		return $this->getPhoneForVerification();
+	}
+
 }

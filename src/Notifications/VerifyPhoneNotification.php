@@ -2,6 +2,7 @@
 namespace Takdeniz\PhoneVerify\Notifications;
 
 use Config;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -31,12 +32,15 @@ class VerifyPhoneNotification extends Notification implements ShouldQueue
 	 *
 	 * @param mixed $notifiable
 	 * @return array|string
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function via($notifiable)
 	{
 //		return [NexmoVerifyChannel::class, NetGsmChannel::class];
-		return [Verifier::getDriver()->channel()];
+
+		$driver = Verifier::driverResolver($notifiable->getPhoneForVerification());
+
+		return [Verifier::getDriver($driver)->channel()];
 	}
 
 	/**
@@ -79,7 +83,8 @@ class VerifyPhoneNotification extends Notification implements ShouldQueue
 	 */
 	public function toNetgsm($notifiable)
 	{
-		$verification = Verifier::getDriver()->buildVerifyRequest($notifiable);
+		$driver = Verifier::driverResolver($notifiable->getPhoneForVerification());
+		$verification = Verifier::getDriver($driver)->buildVerifyRequest($notifiable);
 
 		$message = trans('verify::verify.send_message', [
 			'brand'  => $this->getBrand(),
@@ -87,7 +92,6 @@ class VerifyPhoneNotification extends Notification implements ShouldQueue
 			'expire' => 5
 		]);
 
-		return (new NetGsmOtpMessage($message))
-			->setRecipients([$notifiable->getPhoneForVerification()]);
+		return new NetGsmOtpMessage($message);
 	}
 }

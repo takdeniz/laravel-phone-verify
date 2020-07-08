@@ -1,5 +1,8 @@
 <?php
 
+use Takdeniz\PhoneVerify\Drivers\NetGSMVerify;
+use Takdeniz\PhoneVerify\Drivers\NexmoVerify;
+
 return [
 	/**
 	 * User model configuration.
@@ -30,7 +33,12 @@ return [
 	 * available verification drivers
 	 */
 	'drivers'            => [
-		'netgsm'       => \Takdeniz\PhoneVerify\Drivers\NetGSMVerify::class,
-		'nexmo_verify' => \Takdeniz\PhoneVerify\Drivers\NexmoVerify::class,
-	]
+		'netgsm'       => NetGSMVerify::class,
+		'nexmo_verify' => NexmoVerify::class,
+	],
+
+//	'driver_resolver' => [
+//		'netgsm'       => '/^\+90/',
+//		'nexmo_verify' => '/.*/'
+//	]
 ];
